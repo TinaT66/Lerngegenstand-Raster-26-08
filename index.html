@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arbeitsraster: Lerngegenstand entwickeln</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f5f5f3;
+    color: #1a1a18;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+
+  .page {
+    max-width: 720px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 0.5px solid #ddddd8;
+    padding: 2rem 2.5rem;
+  }
+
+  h1 {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    color: #1a1a18;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: #888780;
+    margin-bottom: 0.5rem;
+  }
+
+  .intro {
+    font-size: 13px;
+    color: #888780;
+    margin-bottom: 1.75rem;
+    line-height: 1.6;
+    padding: 10px 12px;
+    background: #f5f5f3;
+    border-radius: 8px;
+  }
+
+  .section { margin-bottom: 1.5rem; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.4rem;
+  }
+
+  .section-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .num-blue  { background: #E6F1FB; color: #0C447C; }
+  .num-teal  { background: #E1F5EE; color: #085041; }
+  .num-amber { background: #FAEEDA; color: #633806; }
+
+  .section-label {
+    font-size: 15px;
+    font-weight: 500;
+    color: #1a1a18;
+  }
+
+  .optional-tag {
+    font-size: 11px;
+    color: #888780;
+    background: #f5f5f3;
+    border: 0.5px solid #ddddd8;
+    border-radius: 4px;
+    padding: 1px 6px;
+    margin-left: 6px;
+    font-weight: 400;
+  }
+
+  .section-hint {
+    font-size: 13px;
+    color: #888780;
+    margin-bottom: 0.5rem;
+    padding-left: 36px;
+    line-height: 1.55;
+  }
+
+  textarea {
+    display: block;
+    margin-left: 36px;
+    width: calc(100% - 36px);
+    min-height: 88px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    border: 0.5px solid #ddddd8;
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: #ffffff;
+    color: #1a1a18;
+    line-height: 1.6;
+  }
+
+  textarea:focus {
+    outline: none;
+    border-color: #378ADD;
+    box-shadow: 0 0 0 2px #E6F1FB;
+  }
+
+  textarea.small { min-height: 60px; }
+
+  .sub-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-left: 36px;
+  }
+
+  .sub-label {
+    font-size: 12px;
+    color: #5f5e5a;
+    margin-bottom: 4px;
+  }
+
+  .sub-field {
+    width: 100%;
+    min-height: 70px;
+    font-size: 13px;
+    font-family: inherit;
+    resize: vertical;
+    border: 0.5px solid #ddddd8;
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: #ffffff;
+    color: #1a1a18;
+    line-height: 1.5;
+  }
+
+  .sub-field:focus {
+    outline: none;
+    border-color: #378ADD;
+    box-shadow: 0 0 0 2px #E6F1FB;
+  }
+
+  hr {
+    border: none;
+    border-top: 0.5px solid #ddddd8;
+    margin: 1.5rem 0;
+  }
+
+  .footer-note {
+    font-size: 12px;
+    color: #888780;
+    line-height: 1.6;
+    margin-top: 1.25rem;
+    padding: 10px 12px;
+    background: #f5f5f3;
+    border-radius: 0 8px 8px 0;
+    border-left: 2px solid #b4b2a9;
+  }
+
+  .print-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.25rem;
+  }
+
+  .btn-print {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-family: inherit;
+    font-weight: 500;
+    color: #1a1a18;
+    background: #ffffff;
+    border: 0.5px solid #b4b2a9;
+    border-radius: 8px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .btn-print:hover { background: #f5f5f3; }
+  .btn-print:active { transform: scale(0.98); }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .page { border: none; border-radius: 0; padding: 1cm 1.5cm; max-width: 100%; }
+    .print-bar { display: none; }
+    textarea, .sub-field {
+      border: 0.5px solid #ccc;
+      background: #fff;
+      min-height: 60px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .section-num { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .intro, .footer-note { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  @media (max-width: 540px) {
+    .page { padding: 1.25rem 1rem; }
+    .sub-grid { grid-template-columns: 1fr; }
+    textarea, .sub-grid { margin-left: 0; width: 100%; }
+    .section-hint { padding-left: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="print-bar">
+    <button class="btn-print" onclick="window.print()">
+      <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="4" y="13" width="12" height="5" rx="1"/>
+        <path d="M4 13V7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/>
+        <path d="M6 6V3h8v3"/>
+        <circle cx="15" cy="10" r="0.75" fill="currentColor" stroke="none"/>
+      </svg>
+      Drucken / als PDF speichern
+    </button>
+  </div>
+  <h1>Arbeitsraster: Lerngegenstand entwickeln</h1>
+  <p class="subtitle">Anwendungsphase — Tandem / Kleingruppe</p>
+  <p class="intro">Füllt das Raster gemeinsam aus — ihr müsst nicht alle Felder vollständig haben. Wichtig ist, dass ihr am Ende sagen könnt, worüber die Schüler*innen konkret nachdenken sollen.</p>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num num-blue">1</div>
+      <span class="section-label">Sache klären: Was ist der Kern?</span>
+    </div>
+    <p class="section-hint">Was ist das Phänomen, der Begriff, das Verfahren oder der Zusammenhang, mit dem Schüler*innen sich auseinandersetzen sollen? Formuliert in einem Satz — noch kein Thema, noch kein Ziel.</p>
+    <textarea placeholder='z. B. „Der Unterschied zwischen einer Beobachtung und einer Deutung beim Lesen literarischer Texte — am Beispiel von [konkretem Text/Szene/Gedicht]."'></textarea>
+  </div>
+
+  <hr>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num num-blue">2</div>
+      <span class="section-label">Strukturzusammenhang: Was gehört dazu?</span>
+    </div>
+    <p class="section-hint">Welche Teilaspekte, Begriffe oder Beziehungen bilden den Gegenstand? Was muss man verstanden haben, um ihn zu durchdringen?</p>
+    <textarea placeholder="Stichpunkte oder Skizze — z. B. als Liste oder Mindmap-Notiz"></textarea>
+  </div>
+
+  <hr>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num num-blue">3</div>
+      <span class="section-label">Kritische Merkmale: Was ist das Entscheidende?</span>
+    </div>
+    <p class="section-hint">Was ist der Knackpunkt — das Merkmal oder die Unterscheidung, an der Verstehen scheitern oder gelingen kann? Was darf auf keinen Fall unklar bleiben?</p>
+    <textarea class="small" placeholder='z. B. „Die Grenze zwischen Beschreibung und Interpretation ist nicht immer eindeutig — genau das ist produktiv."'></textarea>
+  </div>
+
+  <hr>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num num-teal">4</div>
+      <span class="section-label">Lernhürden antizipieren</span>
+    </div>
+    <p class="section-hint">Wo werden Schüler*innen typischerweise hängen bleiben, verwechseln oder vereinfachen? Zwei bis drei Hürden reichen.</p>
+    <div class="sub-grid">
+      <div>
+        <div class="sub-label">Hürde 1</div>
+        <textarea class="sub-field" placeholder="…"></textarea>
+      </div>
+      <div>
+        <div class="sub-label">Hürde 2</div>
+        <textarea class="sub-field" placeholder="…"></textarea>
+      </div>
+      <div>
+        <div class="sub-label">Hürde 3 <span class="optional-tag">optional</span></div>
+        <textarea class="sub-field" placeholder="…"></textarea>
+      </div>
+      <div>
+        <div class="sub-label">Was hilft dagegen?</div>
+        <textarea class="sub-field" placeholder="erste Idee — kein ausgearbeiteter Plan nötig"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num num-amber">5</div>
+      <span class="section-label">Formulierungsversuch <span class="optional-tag">optional — für die KI-Rückmeldung</span></span>
+    </div>
+    <p class="section-hint">Wenn ihr den Lerngegenstand abschließend in einem Satz formulieren wollt: Was sollen Schüler*innen am Ende dieser Stunde verstanden oder können haben — bezogen auf den Gegenstand, nicht auf eine Kompetenz?</p>
+    <textarea class="small" placeholder='„Die Schüler*innen können … unterscheiden / erklären / anwenden …"'></textarea>
+  </div>
+
+  <div class="footer-note">Feld 5 ist der Ausgangspunkt für das KI-Rückmeldetool — ihr könnt ihn aber auch direkt aus dem Gespräch mit der KI-Planungsassistenz entwickeln.</div>
+</div>
+</body>
+</html>
